@@ -1,0 +1,85 @@
+<div class="container">
+  <h2>Summary & Export</h2>
+
+  <div class="form-card">
+    @if (notification()) {
+      <div
+        class="notification"
+        [class.success]="notification()?.type === 'success'"
+        [class.error]="notification()?.type === 'error'"
+        [class.info]="notification()?.type === 'info'"
+      >
+        {{ notification()?.message }}
+      </div>
+    }
+
+    <form [formGroup]="form" class="form-grid">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input id="startDate" type="date" formControlName="startDate" />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input id="endDate" type="date" formControlName="endDate" />
+      </div>
+      <div class="button-group">
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="getSummary()"
+          [disabled]="!form.valid || loading()"
+        >
+          @if (loading()) {
+            Loading...
+          } @else {
+            Get Summary
+          }
+        </button>
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="downloadCSV()"
+          [disabled]="!form.valid || loading()"
+        >
+          Download CSV
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (summaryRows().length) {
+    <div class="summary-card">
+      <h3>Test Results Summary</h3>
+      <div class="summary-content">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Positive</th>
+              <th>Negative</th>
+              <th>Total</th>
+              <th>% Positive</th>
+              <th>% Negative</th>
+              <th>% Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of displayedRows(); track row.test) {
+              <tr>
+                <td>{{ row.test }}</td>
+                <td>{{ row.positive }}</td>
+                <td>{{ row.negative }}</td>
+                <td>{{ row.total }}</td>
+                <td>{{ row.positivePercent }}</td>
+                <td>{{ row.negativePercent }}</td>
+                <td>{{ row.totalPercent }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  } @else {
+    <div>nothing to show..filter data again</div>
+  }
+</div>

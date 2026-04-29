@@ -1,0 +1,41 @@
+<h2>Enter Test Result</h2>
+@if (displayedNotification()) {
+  <div
+    class="notification"
+    [class.success]="displayedNotification()?.type === 'success'"
+    [class.error]="displayedNotification()?.type === 'error'"
+    [class.info]="displayedNotification()?.type === 'info'"
+  >
+    {{ displayedNotification()?.message }}
+  </div>
+}
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="date">Date:</label>
+    <input id="date" type="date" formControlName="date" />
+  </div>
+  <div>
+    <label for="test">Test:</label>
+    <select id="test" formControlName="test">
+      <option value="">Select a test</option>
+      @for (option of testOptions(); track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+  </div>
+  <div>
+    <label for="result">Result:</label>
+    <select id="result" formControlName="result">
+      <option value="">Select</option>
+      <option value="positive">Positive</option>
+      <option value="negative">Negative</option>
+    </select>
+  </div>
+  <button type="submit" [disabled]="!form.valid || loading()">
+    @if (loading()) {
+      Saving...
+    } @else {
+      Save
+    }
+  </button>
+</form>
